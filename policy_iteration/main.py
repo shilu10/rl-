@@ -13,6 +13,7 @@ number_of_actions = frozen_lake_env.action_space.n
 # Initial Random Policy and Value for each state(s) in state space(S). 
 random_value_table = np.zeros(number_of_states)
 random_policy = np.zeros(number_of_states)
+number_of_iteration = 20000
 
 # Reseting and Rendering again
 frozen_lake_env.reset()
