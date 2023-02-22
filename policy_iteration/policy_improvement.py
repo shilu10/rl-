@@ -13,9 +13,11 @@ class PolicyImprovement:
 
         for state in range(self.number_of_state): 
             Q_table = np.zeros(self.action_space.n)
-            for action in range(self.action_space.n): 
+            for action in range(self.action_space.n):
+                val = 0 
                 for next_state_parameters in self.env.P[state][action]:
                     transition_prob, next_state, reward_prob, _ = next_state_parameters
-                    Q_table[action] += (transition_prob * (reward_prob + self.discount * value_table[next_state]))
+                    val += (transition_prob * (reward_prob + self.discount * value_table[next_state]))
+                Q_table[action] = val 
             policy[state] = np.argmax(Q_table)
         return policy

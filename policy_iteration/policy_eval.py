@@ -17,6 +17,7 @@ class PolicyEvaluation:
         delta = 0
         while True: 
             prev_value_table = np.copy(self.value_table)
+            # Full Sweep
             for state in range(self.number_of_states): 
                 action = self.policy[state] 
                 value_for_curr_state = self.cal_curr_state_val(
