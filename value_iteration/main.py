@@ -7,8 +7,8 @@ number_of_state_space = state_space.n
 action_space = frozen_lake_environment.action_space
 number_of_action_space = action_space.n 
 theta = 1e-20
-discount = 0.9
-number_of_iteration = 500
+discount = 1
+number_of_iteration = 100000
 
 
 class ValueIteration: 
@@ -31,23 +31,22 @@ class ValueIteration:
                 Q_value = []
                 for action in range(self.noa): 
                     val = self.sum_cal(state, action, self.gamma, prev_value_table)
-                    Q_value.append(sum(val)) 
-                delta = max(delta, abs(v - value_table[state]))
+                    Q_value.append(val) 
 
-            value_table[state] = max(Q_value)
+                value_table[state] = max(Q_value)
+                delta = max(delta, abs(v - value_table[state]))
             # Converage condition.
-            if delta < self.theta:
+            if (np.sum(np.fabs(prev_value_table - value_table))<=self.theta):
                 break
 
         return value_table
 
     def sum_cal(self, state, action, gamma, prev_vt): 
-        next_states_rewards = [] 
+        next_states_rewards = 0
         for next_state_info in self.env.P[state][action]: 
             trans_prob, next_state, reward_prob, _ = next_state_info
-            val = trans_prob * (reward_prob + gamma * prev_vt[next_state])
-            next_states_rewards.append(val)
-
+            next_states_rewards += trans_prob * (reward_prob + gamma * prev_vt[next_state])
+        
         return next_states_rewards
 
     def greedy_policy_improvement(self, value_table): 
@@ -71,8 +70,28 @@ class ValueIteration:
 
         return random_policy, value_table
 
+    def check(self, learned_policy, learned_vf): 
+        a2w = {0:'<', 1:'v', 2:'>', 3:'^'}
+        policy_arrows = np.array([a2w[x] for x in learned_policy])
 
-vi = ValueIteration(
+        correct_vf = np.array([[0.82352941, 0.82352941, 0.82352941, 0.82352941],
+                            [0.82352941, 0.        , 0.52941176, 0.        ],
+                            [0.82352941, 0.82352941, 0.76470588, 0.        ],
+                            [0.        , 0.88235294, 0.94117647, 0.        ]])
+        correct_policy_arrows = np.array([['<', '^', '^', '^'],
+                                  ['<', '<', '<', '<'],
+                                  ['^', 'v', '<', '<'],
+                                  ['<', '>', 'v', '<']])
+
+        if (np.allclose(learned_vf.reshape([4,-1]), correct_vf) 
+                and np.alltrue(policy_arrows.reshape([4,-1]) == correct_policy_arrows)): 
+                print("It is actually a Optimal Policy")
+
+        else: 
+            print("Not a Optimal Policy")
+
+
+value_iteration = ValueIteration(
     frozen_lake_environment,
     action_space,
     state_space,
@@ -83,4 +102,5 @@ vi = ValueIteration(
     theta
 )
 
-print(vi.run())
+learned_policy, learned_value_function = value_iteration.run()
+value_iteration.check(learned_policy, learned_value_function)
