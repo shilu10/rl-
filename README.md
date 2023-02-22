@@ -3,11 +3,11 @@
 ## Dynamic Programming Methods(Planning)
 
 #### Iterative Policy Evaluation
-![My Image](images/Iterative_policy_eval.png)
+<img src="/images/Iterative_policy_eval.png" alt="Alt text">
 
 #### Policy Iteration
-![My Image](images/0403_policy_iter.png)
+<img src="/images/0403_policy_iter.png" alt="Alt text">
 
 #### Value Iteration
-![My Image](images/value_iteration.png)
+<img src="/images/value_iteration.png" alt="Alt text">
 
