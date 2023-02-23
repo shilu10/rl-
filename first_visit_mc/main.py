@@ -1,3 +1,5 @@
+# Reference: https://marcinbogdanski.github.io/rl-sketchpad/RL_An_Introduction_2018/0501_First_Visit_MC_Prediction.html
+
 import numpy
 import gym
 from matplotlib import pyplot
