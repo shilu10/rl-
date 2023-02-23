@@ -12,12 +12,15 @@ class GenerateEpisode:
     
     def run(self, env, policy):
         trajectory = []
-        observation = env.reset()
+        done = True
         while True:
+            if done:
+                observation, reward, done = env.reset(), None, False
+            else:
+                observation, reward, done, info, _ = env.step(action)
             if self.check_2d_obser(observation): 
                 observation = observation[0]
             action = policy(observation)
-            observation, reward, done, info, _ = env.step(action)
             trajectory.append((observation, action, reward))
             if done:
                 break
