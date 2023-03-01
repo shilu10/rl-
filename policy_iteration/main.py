@@ -2,8 +2,10 @@ import gym
 import numpy as np
 from policy_eval import * 
 from policy_improvement import *
+from eval import *
+from record import *
 
-frozen_lake_env = gym.make('FrozenLake-v1') 
+frozen_lake_env = gym.make('FrozenLake-v1', render_mode="rgb_array") 
 action_space = frozen_lake_env.action_space
 state_space = frozen_lake_env.observation_space
 number_of_states = frozen_lake_env.observation_space.n
@@ -12,7 +14,7 @@ number_of_actions = frozen_lake_env.action_space.n
 # Initial Random Policy and Value for each state(s) in state space(S). 
 random_value_table = np.zeros(number_of_states)
 random_policy = np.zeros(number_of_states)
-number_of_iteration = 2100
+number_of_iteration = 10
 
 # Reseting and Rendering again
 frozen_lake_env.reset()
@@ -108,4 +110,16 @@ policy_iteraton = PolicyIteration(
 learned_policy, learned_vf = policy_iteraton.run(number_of_iteration)
 policy_iteraton.check(learned_policy, learned_vf)
 
+mean_rwd, std_rwd = eval_model(
+    frozen_lake_env,
+    200,
+    learned_policy,
+    None
+)
 
+print(f"Reward Mean: {mean_rwd}, Reward Std: {std_rwd}")
+record_video(
+    frozen_lake_env,
+    learned_policy,
+    "agen_interaction.mp4"
+)

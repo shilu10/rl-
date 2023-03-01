@@ -1,5 +1,6 @@
 import numpy as np 
 import gym 
+from eval import *
 
 frozen_lake_environment = gym.make("FrozenLake-v1")
 state_space = frozen_lake_environment.observation_space
@@ -8,7 +9,7 @@ action_space = frozen_lake_environment.action_space
 number_of_action_space = action_space.n 
 theta = 1e-20
 discount = 1
-number_of_iteration = 100000
+number_of_iteration = 10000
 
 
 class ValueIteration: 
@@ -104,3 +105,7 @@ value_iteration = ValueIteration(
 
 learned_policy, learned_value_function = value_iteration.run()
 value_iteration.check(learned_policy, learned_value_function)
+
+mean_rwd, std_rwd = eval_model(frozen_lake_environment, 200, learned_policy, None)
+
+print(f"Mean Reward: {mean_rwd}, Std Reward: {std_rwd}")
